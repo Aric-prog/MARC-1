@@ -5,10 +5,17 @@ const cors = require('cors');
 const express = require('express');
 const io = require('socket.io-client');
 const config = require('./config/config.js')
+const registerConnectionHandler = require('./socket/connectionHandler')
+const registerStreamHandler = require('./socket/streamHandler')
 
 const app = express();
-const server = http.createServer(app);
-
 app.use(cors())
-const socket = io.connect(config.marciUUID);
+const server = http.createServer(app);
+const socket = io.connect(config.serverEndpoint);
 
+socket.on('connect', function(){
+  registerConnectionHandler(socket)
+  registerStreamHandler(socket) 
+})
+
+server.listen(3000)
