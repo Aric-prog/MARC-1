@@ -1,6 +1,12 @@
 const config = require('../config/config')
 const { spawn } = require('child_process')
 module.exports = function(socket) {
+  const initializeStreamInput = (socket, streamScript) => {
+    socket.once('streamInput', (input) => {
+      streamScript.stdin.write(input)
+      streamScript.stdin.end()
+    })
+  }
   socket.on('streamRequest', function(token){
     const marciUUID = config.marciUUID
     // Do logic here where marci sends in their uuid, and also token to jason's stream server (on the /on_publish endpoint i think)
@@ -19,6 +25,7 @@ module.exports = function(socket) {
       
       if(/(Press \[q\] to stop)/gm.test(output)){
         socket.emit('streamStatus', 200)
+        initializeStreamInput(socket, streamScript)
       }
     })
 

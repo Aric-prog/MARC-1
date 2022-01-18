@@ -2,8 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 # Pins for Motor Driver Inputs 
-
-
+    
 motorLeftA = 13
 motorLeftB = 15
 motorLeftE = 11
