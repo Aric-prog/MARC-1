@@ -26,7 +26,7 @@ def move(orientation, amount):
 
 def detectKeyword(text):
     text = text.lower()
-    text = re.sub('[^a-zA-Z0-9 \n\.]', '', text)
+    text = re.sub('[^a-zA-Z0-9 \n]', '', text)
     if(listOfWordExistInString(['note'], text)):
         # Eat words from the word 'note' to the right
         textContent = text.split('note')[1].strip()
@@ -51,6 +51,7 @@ def detectKeyword(text):
             print("No orientation detected, command denied")
     elif(listOfWordExistInString(['alarm'], text)):
         # PARSE CLOCK :((
+        print(text)
         amount = re.search(r'\d+', text).group()
         
         meridiem = ''
@@ -58,4 +59,5 @@ def detectKeyword(text):
             if(i in text):
                 meridiem = i
                 break
-        print(amount, meridiem)
+        print('setting alarm at :', amount, meridiem)
+
