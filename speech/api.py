@@ -2,6 +2,7 @@ import speech_recognition as sr
 import re
 r = sr.Recognizer()
 
+# TODO : Initialize flask server here with their endpoints, also find out how to do http request to the other sockets 
 def startListening():
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
