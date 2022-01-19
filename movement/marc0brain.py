@@ -16,7 +16,7 @@ motorPins = [motorLeftA, motorLeftB, motorLeftE, motorRightA, motorRightB, motor
 
 # Pins for Infrared sensors
 frontIRSensor = 8
-backIRSensor = 7
+backIRSensor = 10
 IRSensorPins = [frontIRSensor, backIRSensor]
 
 def setup():
@@ -56,17 +56,18 @@ def turnRight():
     runWheelReverse(motorRightA, motorRightB, motorRightE)
 
 def turnLeft():
-    # Implement IR stopping.
     runWheelForward(motorRightA, motorRightB, motorRightE)
     runWheelReverse(motorLeftA, motorLeftB, motorLeftE)
  
-# def generalMove(movementfunctionarg : moveFunction):
-    # if(gpioinput):
-    #     movementfunctionarg()
-    #     on done
-    #     return 200
-    # else:
-    #     return 401
+def generalMove(movementfunctionarg):
+    stopMotor()
+    if GPIO.input(frontIRSensor) and GPIO.input(backIRSensor):
+        movementfunctionarg()
+        return 200
+    else:
+        #kill the movement
+        return 401
+
 def loop():
     while True:
         if GPIO.input(frontIRSensor):
