@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask import Flask
 
 app = Flask(__name__)
@@ -6,8 +6,12 @@ app = Flask(__name__)
 bp = Blueprint("movement", __name__, url_prefix="/move")
 
 # TODO : Expose movement routes here, integrate with bryan
-@bp.route("/")
-def index():
+orientationFunction = {
+    'reverse' : 
+}
+@bp.route("/move")
+def determineMovement():
+    print(request.json()['orientation'])
     return ""
 
 if(__name__ == '__main__'):

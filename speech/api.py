@@ -1,5 +1,6 @@
 from itsdangerous import json
 import speech_recognition as sr
+import requests
 import re
 from flask import Flask
 from flask import Blueprint
@@ -23,7 +24,6 @@ def startListening():
             text = r.recognize_google(audio)
             print("Recognized voice input : ", text)
             return detectKeyword(text)
-
         except:
             print('Marci could not understand the command')
 
@@ -48,9 +48,9 @@ def detectKeyword(text):
     elif(listOfWordExistInString(['go', 'move'], text)):
         orientationList = [
             'forward',
-            'back',
+            'reverse',
             'left',
-            'right' 
+            'right', 
         ]
         # Find parameters such as the amount you go (1, 5) and direction
         moveAmount = re.search(r'\d+', text).group()
@@ -65,8 +65,8 @@ def detectKeyword(text):
         response['orientation'] = orientation
         response['moveAmount'] = moveAmount
 
-        if(orientation != ''):
-            return 401
+        if(orientation == ''):
+            response['statusCode'] = 401
     elif(listOfWordExistInString(['alarm'], text)):
         # PARSE CLOCK :((
         time = re.search(r'\d+', text).group()
@@ -80,7 +80,8 @@ def detectKeyword(text):
         response['event'] = 'alarm'
         response['meridiem'] = meridiem
         response['time'] = time
-    print(response)
+    
+    # Response json is for internal use 
     return json.dumps(response, indent = 4)
 
 if __name__ == '__main__':

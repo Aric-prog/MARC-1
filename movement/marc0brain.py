@@ -1,3 +1,4 @@
+from turtle import done
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -55,9 +56,17 @@ def turnRight():
     runWheelReverse(motorRightA, motorRightB, motorRightE)
 
 def turnLeft():
+    # Implement IR stopping.
     runWheelForward(motorRightA, motorRightB, motorRightE)
     runWheelReverse(motorLeftA, motorLeftB, motorLeftE)
  
+# def generalMove(movementfunctionarg : moveFunction):
+    # if(gpioinput):
+    #     movementfunctionarg()
+    #     on done
+    #     return 200
+    # else:
+    #     return 401
 def loop():
     while True:
         if GPIO.input(frontIRSensor):
