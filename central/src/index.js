@@ -1,6 +1,7 @@
 // This file should launch on start up
 // Immediately connects to MARC0 backend server, listens to event such as first time setup and video requests
 const http = require('http');
+const request = require()
 const cors = require('cors');
 const express = require('express');
 const io = require('socket.io-client');
@@ -18,4 +19,13 @@ socket.on('connect', function(){
   registerStreamHandler(socket) 
 })
 
-server.listen(3000)
+for (const i of ['left', 'right', 'forward', 'back']){
+  socket.on('move' + i, function(){
+    request('http://localhost:8001/move' + i, function(req, res){
+      
+    })
+  })
+}
+
+
+server.listen(8000)

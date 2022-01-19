@@ -12,15 +12,20 @@ r = sr.Recognizer()
 bp = Blueprint("speech", __name__, url_prefix="/speech")
 
 @bp.route("/listen")
-def startListening():
+def acceptListenRequest():
+    try:
+        with sr.Microphone() as source:
+            return 200
+    except:
+        return 401
+
+@bp.after_request
+def startListening(response):
     with sr.Microphone() as source:
-        r.adjust_for_ambient_noise(source)
         print('Marci is now listening')
         audio = r.listen(source)
         
         try:
-            # Separate intent and parameter
-            # Get keywords like go, move, set alarm,
             text = r.recognize_google(audio)
             print("Recognized voice input : ", text)
             return detectKeyword(text)
@@ -82,6 +87,7 @@ def detectKeyword(text):
         response['time'] = time
     
     # Response json is for internal use 
+    # Send this straight to central module
     return json.dumps(response, indent = 4)
 
 if __name__ == '__main__':
