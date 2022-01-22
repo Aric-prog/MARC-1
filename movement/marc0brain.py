@@ -64,12 +64,12 @@ def turnLeft():
 def generalMove(movementfunctionarg):
     movementfunctionarg()
     stopMotor()
-    if GPIO.input(frontIRSensor) and GPIO.input(backIRSensor):
-        movementfunctionarg()
-        return 200
-    else:
-        # kill the movement
-        return 401
+    # if GPIO.input(frontIRSensor) and GPIO.input(backIRSensor):
+    #     movementfunctionarg()
+    #     return 200
+    # else:
+    #     # kill the movement
+    #     return 401
 
 def loop():
     # while True:
