@@ -24,12 +24,11 @@ def acceptListenRequest():
             print("Recognized voice input : ", text)
             detectedEvent = detectKeyword(text)
             if('event' in detectedEvent):
-                
+                # requests.post()
                 return Response(status=201)
+                # Do stuff and send this to central
             else:
                 return Response(status=401)
-                # requests.post()
-                # Do stuff and send this to central
         except:
             print('Marci could not understand the command')
             return Response(status=401)
@@ -76,16 +75,10 @@ def detectKeyword(text):
             response['statusCode'] = 401
     elif(listOfWordExistInString(['alarm'], text)):
         # PARSE CLOCK :((
+        # Let's just do military time :))
         time = re.search(r'\d+', text).group()
-        meridiem = ''
-
-        for i in ['am', 'pm']:
-            if(i in text):
-                meridiem = i
-                break
-
+    
         response['event'] = 'alarm'
-        response['meridiem'] = meridiem
         response['time'] = time
     
     # Response json is for internal use 
