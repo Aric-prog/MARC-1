@@ -2,15 +2,15 @@ from turtle import done
 import RPi.GPIO as GPIO
 from time import sleep
 
-# Pins for Motor Driver Inputs
+# Pins for Motor Driver Inputs 
+    
+motorLeftA = 18
+motorLeftB = 16
+motorLeftE = 22
 
-motorLeftA = 13
-motorLeftB = 15
-motorLeftE = 11
-
-motorRightA = 18
-motorRightB = 16
-motorRightE = 22
+motorRightA = 13
+motorRightB = 15
+motorRightE = 11
 
 motorPins = [motorLeftA, motorLeftB, motorLeftE,
     motorRightA, motorRightB, motorRightE]
@@ -62,6 +62,7 @@ def turnLeft():
     runWheelReverse(motorLeftA, motorLeftB, motorLeftE)
  
 def generalMove(movementfunctionarg):
+    movementfunctionarg()
     stopMotor()
     if GPIO.input(frontIRSensor) and GPIO.input(backIRSensor):
         movementfunctionarg()
@@ -71,18 +72,18 @@ def generalMove(movementfunctionarg):
         return 401
 
 def loop():
-    while True:
-        if GPIO.input(frontIRSensor):
-            forward()
-            sleep(2)
-            turnLeft()
-            sleep(2)
-            turnRight()
-            sleep(2)
-            reverse()
-            sleep(2)
-        else:
-            stopMotor(motorLeftE, motorRightE)
+    # while True:
+    #     if GPIO.input(frontIRSensor):
+    #         forward()
+    #         sleep(2)
+    #         turnLeft()
+    #         sleep(2)
+    #         turnRight()
+    #         sleep(2)
+    #         reverse()
+    #         sleep(2)
+    #     else:
+    #         stopMotor(motorLeftE, motorRightE)
 
 def destroy():	
 	GPIO.cleanup()
