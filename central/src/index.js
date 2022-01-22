@@ -8,28 +8,23 @@ const io = require('socket.io-client');
 const config = require('./config/config.js')
 const registerConnectionHandler = require('./socket/connectionHandler')
 const registerStreamHandler = require('./socket/streamHandler')
+const registerListenHandler = require('./socket/listenHandler')
+const registerMovementHandler = require('./socket/movementHandler')
+
 
 const app = express();
-app.use(cors())
 const server = http.createServer(app);
 const socket = io.connect(config.serverEndpoint);
+const listener = require('./controllers/listener')(socket)
+
+app.use(cors())
+app.use('/', listener)
 
 socket.on('connect', function(){
   registerConnectionHandler(socket)
   registerStreamHandler(socket) 
-})
-
-for (const i of ['left', 'right', 'forward', 'back']){
-  socket.on('move' + i, function(){
-    console.log(i)
-    request.post('http://localhost:8001/move', { form : { orientation : i}}, function(req, res){
-    })
-  })
-}
-socket.on('listen', function(){
-  request.get('http://localhost:8002/listen' + i, function(req, res){
-    console.log(res)
-  })
+  registerListenHandler(socket) 
+  registerMovementHandler(socket) 
 })
 
 server.listen(8000)

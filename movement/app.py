@@ -19,5 +19,5 @@ def determineMovement():
     print('move to', request.form['orientation'])
     return Response(status=marc0brain.generalMove(movementFunctions[request.form['orientation']]))
     
+# This app should run on port 8001
 app.register_blueprint(bp)
-app.run(port=8001, host='localhost')

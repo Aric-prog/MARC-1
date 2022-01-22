@@ -1,36 +1,38 @@
+from ast import Return
 from itsdangerous import json
 import speech_recognition as sr
 import requests
 import re
-from flask import Flask
+from flask import Flask, Response
 from flask import Blueprint
 
 app = Flask(__name__)
 
 # TODO : Initialize flask server here with their endpoints, also find out how to do http request to the other sockets 
 r = sr.Recognizer()
-bp = Blueprint("speech", __name__, url_prefix="/speech")
+bp = Blueprint("speech", __name__, url_prefix="/")
 
 @bp.route("/listen")
 def acceptListenRequest():
-    try:
-        with sr.Microphone() as source:
-            return 200
-    except:
-        return 401
-
-@bp.after_request
-def startListening(response):
+    # Turns out requests only resolve after after_request
     with sr.Microphone() as source:
         print('Marci is now listening')
+        requests.post('http://localhost:8000/listenStatus')
         audio = r.listen(source)
-        
         try:
             text = r.recognize_google(audio)
             print("Recognized voice input : ", text)
-            return detectKeyword(text)
+            detectedEvent = detectKeyword(text)
+            if('event' in detectedEvent):
+                
+                return Response(status=201)
+            else:
+                return Response(status=401)
+                # requests.post()
+                # Do stuff and send this to central
         except:
             print('Marci could not understand the command')
+            return Response(status=401)
 
 def listOfWordExistInString(words, text):
     return set(words).intersection(text.split())
@@ -88,8 +90,7 @@ def detectKeyword(text):
     
     # Response json is for internal use 
     # Send this straight to central module
-    return json.dumps(response, indent = 4)
+    return response
 
-if __name__ == '__main__':
-    app.register_blueprint(bp)
-    app.run(port=8002, host='localhost')
+# This app should run on port 8002
+app.register_blueprint(bp)
