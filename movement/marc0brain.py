@@ -2,8 +2,8 @@ from turtle import done
 import RPi.GPIO as GPIO
 from time import sleep
 
-# Pins for Motor Driver Inputs 
-    
+# Pins for Motor Driver Inputs
+
 motorLeftA = 13
 motorLeftB = 15
 motorLeftE = 11
@@ -12,19 +12,21 @@ motorRightA = 18
 motorRightB = 16
 motorRightE = 22
 
-motorPins = [motorLeftA, motorLeftB, motorLeftE, motorRightA, motorRightB, motorRightE]
+motorPins = [motorLeftA, motorLeftB, motorLeftE,
+    motorRightA, motorRightB, motorRightE]
 
 # Pins for Infrared sensors
 frontIRSensor = 8
 backIRSensor = 10
 IRSensorPins = [frontIRSensor, backIRSensor]
 
+
 def setup():
     # GPIO Numbering
-	GPIO.setmode(GPIO.BOARD)				
+	GPIO.setmode(GPIO.BOARD)
 
     # set all motor pins as outputs
-	GPIO.setup(motorPins, GPIO.OUT) 
+	GPIO.setup(motorPins, GPIO.OUT)
 
     # set all infrared sensor pins as inputs
     GPIO.setup(IRSensorPins, GPIO.IN)
@@ -65,7 +67,7 @@ def generalMove(movementfunctionarg):
         movementfunctionarg()
         return 200
     else:
-        #kill the movement
+        # kill the movement
         return 401
 
 def loop():
