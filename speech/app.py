@@ -2,6 +2,7 @@ from ast import Return
 from itsdangerous import json
 import speech_recognition as sr
 import requests
+import alarm
 import re
 from flask import Flask, Response
 from flask import Blueprint
@@ -24,8 +25,12 @@ def acceptListenRequest():
             print("Recognized voice input : ", text)
             detectedEvent = detectKeyword(text)
             if('event' in detectedEvent):
-                # requests.post()
-                return Response(status=201)
+                response = bp.response_class(
+                    response = json.dumps(detectedEvent),
+                    status=200,
+                    mimetype='application/json'
+                )
+                return response
                 # Do stuff and send this to central
             else:
                 return Response(status=401)
@@ -45,7 +50,6 @@ def detectKeyword(text):
     text = re.sub('[^a-zA-Z0-9 \n]', '', text)
 
     response = {}
-
     if(listOfWordExistInString(['note'], text)):
         # Eat words from the word 'note' to the right
         textContent = text.split('note')[1].strip()
@@ -72,7 +76,7 @@ def detectKeyword(text):
         response['moveAmount'] = moveAmount
 
         if(orientation == ''):
-            response['statusCode'] = 401
+            response['event'] = 'move'
     elif(listOfWordExistInString(['alarm'], text)):
         # PARSE CLOCK :((
         # Let's just do military time :))
@@ -80,6 +84,7 @@ def detectKeyword(text):
     
         response['event'] = 'alarm'
         response['time'] = time
+        alarm.alarm(time)
     
     # Response json is for internal use 
     # Send this straight to central module
