@@ -2,8 +2,8 @@ from turtle import done
 import RPi.GPIO as GPIO
 from time import sleep
 
-# Pins for Motor Driver Inputs 
-    
+# Pins for Motor Driver Inputs
+
 motorLeftA = 18
 motorLeftB = 16
 motorLeftE = 22
@@ -13,7 +13,7 @@ motorRightB = 15
 motorRightE = 11
 
 motorPins = [motorLeftA, motorLeftB, motorLeftE,
-    motorRightA, motorRightB, motorRightE]
+             motorRightA, motorRightB, motorRightE]
 
 # Pins for Infrared sensors
 frontIRSensor = 8
@@ -23,44 +23,52 @@ IRSensorPins = [frontIRSensor, backIRSensor]
 
 def setup():
     # GPIO Numbering
-	GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BOARD)
 
     # set all motor pins as outputs
-	GPIO.setup(motorPins, GPIO.OUT)
+    GPIO.setup(motorPins, GPIO.OUT)
 
     # set all infrared sensor pins as inputs
     GPIO.setup(IRSensorPins, GPIO.IN)
-    
+
+
 def runWheelForward(motorA, motorB, motorE):
-    GPIO.output(motorE,GPIO.HIGH)
-    GPIO.output(motorA,GPIO.HIGH)
-    GPIO.output(motorB,GPIO.LOW)
+    GPIO.output(motorE, GPIO.HIGH)
+    GPIO.output(motorA, GPIO.HIGH)
+    GPIO.output(motorB, GPIO.LOW)
+
 
 def runWheelReverse(motorA, motorB, motorE):
-    GPIO.output(motorE,GPIO.HIGH)
-    GPIO.output(motorA,GPIO.LOW)
-    GPIO.output(motorB,GPIO.HIGH)
+    GPIO.output(motorE, GPIO.HIGH)
+    GPIO.output(motorA, GPIO.LOW)
+    GPIO.output(motorB, GPIO.HIGH)
+
 
 def forward():
     runWheelForward(motorLeftA, motorLeftB, motorLeftE)
     runWheelForward(motorRightA, motorRightB, motorRightE)
 
+
 def reverse():
     runWheelReverse(motorLeftA, motorLeftB, motorLeftE)
     runWheelReverse(motorRightA, motorRightB, motorRightE)
 
+
 def stopMotor(motorLeftE, motorRightE):
-    GPIO.output(motorLeftE,GPIO.LOW)
-    GPIO.output(motorRightE,GPIO.LOW) 
+    GPIO.output(motorLeftE, GPIO.LOW)
+    GPIO.output(motorRightE, GPIO.LOW)
+
 
 def turnRight():
     runWheelForward(motorLeftA, motorLeftB, motorLeftE)
     runWheelReverse(motorRightA, motorRightB, motorRightE)
 
+
 def turnLeft():
     runWheelForward(motorRightA, motorRightB, motorRightE)
     runWheelReverse(motorLeftA, motorLeftB, motorLeftE)
- 
+
+
 def generalMove(movementfunctionarg):
     movementfunctionarg()
     stopMotor()
@@ -71,7 +79,9 @@ def generalMove(movementfunctionarg):
         # kill the movement
         return 401
 
+
 def loop():
+    pass
     # while True:
     #     if GPIO.input(frontIRSensor):
     #         forward()
@@ -85,12 +95,14 @@ def loop():
     #     else:
     #         stopMotor(motorLeftE, motorRightE)
 
-def destroy():	
-	GPIO.cleanup()
+
+def destroy():
+    GPIO.cleanup()
+
 
 if __name__ == '__main__':     # Program start from here
-	setup()
-	try:
-    	loop()
-  	except KeyboardInterrupt:
-		destroy()
+    setup()
+    try:
+        loop()
+    except KeyboardInterrupt:
+        destroy()
