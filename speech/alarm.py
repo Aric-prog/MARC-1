@@ -20,5 +20,5 @@ def alarm(milTime):
     t.start()
 
 def soundAlarm():
-    playsound('alarm.mp3')
+    playsound('alarm.mp3', False)
     print('Alarm will ring in this function')

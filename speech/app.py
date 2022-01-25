@@ -72,7 +72,7 @@ def detectKeyword(text):
         # PARSE CLOCK :((
         # Let's just do military time :))
         time = re.search(r'\d+', text).group()
-    
+        print(time)
         response['event'] = 'alarm'
         response['time'] = time
         alarm.alarm(time)
