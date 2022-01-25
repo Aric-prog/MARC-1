@@ -1,6 +1,6 @@
 from threading import Timer
 import datetime
-
+from playsound import playsound
 # Assuming this is proper military time
 def alarm(milTime):
     milTime.rjust(4, '0')
@@ -20,4 +20,5 @@ def alarm(milTime):
     t.start()
 
 def soundAlarm():
+    playsound('alarm.mp3')
     print('Alarm will ring in this function')
