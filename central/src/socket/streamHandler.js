@@ -7,14 +7,14 @@ module.exports = function(socket) {
       streamScript.stdin.end()
     })
   }
-  socket.on('streamRequest', function(token){
+  socket.on('streamRequest', function(uniqueString, uid){
     const marciUUID = config.marciUUID
-    // Do logic here where marci sends in their uuid, and also token to jason's stream server (on the /on_publish endpoint i think)
+    // Do logic here where marci sends in their uuid, and also uniqueString to jason's stream server (on the /on_publish endpoint i think)
     // Pings server back on what happened to stream attempt both failed and not, this will be determine the http response. 
     
     let statusCode = 200;
-    // Do ffmpeg shenanigans (bash) here, send in token sama marciUUID separated by '?'
-    const credential = `${token}?${marciUUID}`
+    // Do ffmpeg shenanigans (bash) here, send in uniqueString sama marciUUID separated by '?'
+    const credential = `${uniqueString}?${marciUUID}?${uid}`
     const streamScript = spawn(`startStream.sh`, [credential])
   
     streamScript.stderr.on('data', (data) => {

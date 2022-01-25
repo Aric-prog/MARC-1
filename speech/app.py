@@ -1,4 +1,3 @@
-from ast import Return
 from itsdangerous import json
 import speech_recognition as sr
 import requests
@@ -16,27 +15,22 @@ bp = Blueprint("speech", __name__, url_prefix="/")
 @bp.route("/listen")
 def acceptListenRequest():
     # Turns out requests only resolve after after_request
-    with sr.Microphone() as source:
-        print('Marci is now listening')
-        requests.post('http://localhost:8000/listenStatus')
-        audio = r.listen(source)
-        try:
+    try:
+        with sr.Microphone() as source:
+            print('Marci is now listening')
+            requests.post('http://localhost:8000/listenStatus')
+            r.adjust_for_ambient_noise(source)
+            audio = r.listen(source)
             text = r.recognize_google(audio)
             print("Recognized voice input : ", text)
             detectedEvent = detectKeyword(text)
             if('event' in detectedEvent):
-                response = bp.response_class(
-                    response = json.dumps(detectedEvent),
-                    status=200,
-                    mimetype='application/json'
-                )
-                return response
-                # Do stuff and send this to central
+                return detectedEvent
             else:
                 return Response(status=401)
-        except:
-            print('Marci could not understand the command')
-            return Response(status=401)
+    except sr.UnknownValueError:
+        print("Marci couldn't understand what you said")
+        return Response(status=401)
 
 def listOfWordExistInString(words, text):
     return set(words).intersection(text.split())
@@ -64,9 +58,9 @@ def detectKeyword(text):
         ]
         # Find parameters such as the amount you go (1, 5) and direction
         moveAmount = re.search(r'\d+', text).group()
-        orientation = ""
+        orientation = "forward"
          
-        for i in orientationList.keys():
+        for i in orientationList:
             if(i in text):
                 orientation = i
                 break
@@ -74,9 +68,6 @@ def detectKeyword(text):
         response['event'] = 'move'
         response['orientation'] = orientation
         response['moveAmount'] = moveAmount
-
-        if(orientation == ''):
-            response['event'] = 'move'
     elif(listOfWordExistInString(['alarm'], text)):
         # PARSE CLOCK :((
         # Let's just do military time :))
