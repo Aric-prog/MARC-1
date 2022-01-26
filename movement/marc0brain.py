@@ -1,4 +1,5 @@
 from turtle import done
+import asyncio
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -69,15 +70,12 @@ def turnLeft():
     runWheelReverse(motorLeftA, motorLeftB, motorLeftE)
 
 
-def generalMove(movementfunctionarg):
+async def generalMove(movementfunctionarg):
     movementfunctionarg()
     stopMotor()
-    if GPIO.input(frontIRSensor) and GPIO.input(backIRSensor):
+    while (GPIO.input(frontIRSensor) and GPIO.input(backIRSensor)):
         movementfunctionarg()
         return 200
-    else:
-        # kill the movement
-        return 401
 
 
 def loop():
