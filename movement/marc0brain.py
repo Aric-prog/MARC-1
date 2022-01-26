@@ -1,6 +1,7 @@
 from turtle import done
 import RPi.GPIO as GPIO
 from time import sleep
+from gpiozero import Servo
 
 # Pins for Motor Driver Inputs
 
@@ -12,6 +13,8 @@ motorRightA = 13
 motorRightB = 15
 motorRightE = 11
 
+SERVO_PIN = 37
+
 motorPins = [motorLeftA, motorLeftB, motorLeftE,
              motorRightA, motorRightB, motorRightE]
 
@@ -20,6 +23,8 @@ frontIRSensor = 8
 backIRSensor = 10
 IRSensorPins = [frontIRSensor, backIRSensor]
 
+servo = Servo(SERVO_PIN)
+servo.value = 0
 
 def setup():
     # GPIO Numbering
@@ -79,6 +84,9 @@ def generalMove(movementfunctionarg):
         # kill the movement
         return 401
 
+def rotateCamera(rotate):
+    servo.value += max(-1, min(servo.value + rotate, 1))
+    return 200
 
 def loop():
     pass
@@ -95,10 +103,8 @@ def loop():
     #     else:
     #         stopMotor(motorLeftE, motorRightE)
 
-
 def destroy():
     GPIO.cleanup()
-
 
 if __name__ == '__main__':     # Program start from here
     setup()

@@ -17,6 +17,8 @@ const server = http.createServer(app);
 const socket = io.connect(config.serverEndpoint);
 const listener = require('./controllers/listener')(socket)
 
+// let sendPictures = true;
+
 app.use(cors())
 app.use('/', listener)
 
@@ -26,5 +28,20 @@ socket.on('connect', function(){
   registerListenHandler(socket) 
   registerMovementHandler(socket) 
 })
+
+// Initiate routine that will send pictures constantly
+// (function startStreaming() {
+//   if (sendPictures) {
+//     setTimeout(() => {
+//       fetch("http://localhost:8001/image").then((data) => data.text()).then((img) => {
+//         socket.emit("image", {
+//           img,
+//           marciUUID: config.marciUUID,
+//         });
+//         startStreaming();
+//       })
+//     }, 100);
+//   }
+// })();
 
 server.listen(8000)
